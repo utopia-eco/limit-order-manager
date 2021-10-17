@@ -49,7 +49,7 @@ app.post('/createLimitOrder', async (req, res) => {
     orderStatus: "PENDING",
     orderCode: req.body.ordererAddress + "_" + currentTime,
   }
-  const query = "INSERT INTO " + req.body.tokenOutAddress + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO " + req.body.tokenOutAddress + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       const [results, fields] = await limitOrderPool.query(query, Object.values(orderData));
       if (!results[0]) {
@@ -65,7 +65,7 @@ app.post('/createLimitOrder', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
-  const query = "DELETE * FROM " + req.params.token + "WHERE orderCode = " + req.params.orderCode
+  const query = "DELETE * FROM " + req.params.token + "_limitOrder WHERE orderCode = " + req.params.orderCode
     try {
       const [results, fields] = await limitOrderPool.query(query);
       if (!results[0]) {
