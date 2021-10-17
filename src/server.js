@@ -19,7 +19,7 @@ app.get('/health', (req, res) => res.send("Healthy"));
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + token + "where ordererAddress = "
+  const query = "SELECT * FROM " + token + "_limitOrder where ordererAddress = "
     try {
       const [results, fields] = await limitOrderPool.query(query);
       if (!results[0]) {
