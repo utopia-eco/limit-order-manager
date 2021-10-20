@@ -38,8 +38,6 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
 
 // Creates a limit order
 app.post('/createLimitOrder', async (req, res) => {
-  console.log("abcde");
-  console.log(req.body);
   const currentTime = Math.round(new Date() / 1000);
   const orderData = {
     ordererAddress: req.body.ordererAddress,
@@ -59,13 +57,10 @@ app.post('/createLimitOrder', async (req, res) => {
   const query = "INSERT INTO " + req.body.tokenOutAddress + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       const [results, fields] = await limitOrderPool.query(query, Object.values(orderData));
-      if (!results[0]) {
-        res.json({ status: "Not Found" });
-      } else {
-        res.json(results[0])
-      }
+      res.json({ status: "Success"})
     } catch (error) {
       console.error("error", error);
+      res.json({ status: "Failure" });
     }
 })
 
