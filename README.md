@@ -11,9 +11,8 @@ Limit Order APIs
             - `ordererAddress`: Orderer Address
             - `tokenInAddress`: Address of the BEP-20 token that the user wants to convert from (usually WBNB)
             - `tokenOutAddress`: Address of the target BEP-20 token that the user wants to convert to
-            - `tokenInValue`: Value of token that the user wants to convert from
-            - `tokenOutValue`: Value of the token that the user wants to convert to
-            - `tokenPrice`: tokenIn/tokenOut price which the user wants to convert at
+            - `tokenInAmount`: Amount of token that the user wants to convert from
+            - `tokenOutAmount`: Amount of the token that the user wants to convert to
             - `slippage`: Maximum slippage that the user allows for the limit order trade
 - Deletes a limit order
     - DELETE /deleteLimitOrder/:token/:orderCode
@@ -31,9 +30,8 @@ Stop Loss APIs (WIP)
             - `ordererAddress`: Orderer Address
             - `tokenInAddress`: Address of the BEP-20 token that the user wants to convert from (usually WBNB)
             - `tokenOutAddress`: Address of the target BEP-20 token that the user wants to convert to
-            - `tokenInValue`: Value of token that the user wants to convert from
-            - `tokenOutValue`: Value of the token that the user wants to convert to
-            - `tokenPrice`: tokenIn/tokenOut price which the user wants to convert at
+            - `tokenInAmount`: Amount of token that the user wants to convert from
+            - `tokenOutAmount`: Amount of token that the user wants to convert to
             - `slippage`: Maximum slippage that the user allows for the stop loss trade
 - Deletes a stop loss order
     - DELETE /deleteStopLoss/:token/:orderCode
