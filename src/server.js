@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const express = require('express')
-const bodyParser = require('body-parser')
 const app = express()
 const cors = require('cors')
 
@@ -13,7 +12,7 @@ const { tokenPricePool , limitOrderPool, stopLossPool } = require('./databaseCli
 const port = process.env.PORT
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 app.options('*', cors())
 
 app.get('/', (req, res) => {
@@ -39,6 +38,8 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
 
 // Creates a limit order
 app.post('/createLimitOrder', async (req, res) => {
+  console.log("abcde");
+  console.log(req.body);
   const currentTime = Math.round(new Date() / 1000);
   const orderData = {
     ordererAddress: req.body.ordererAddress,
