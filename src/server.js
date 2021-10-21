@@ -23,7 +23,7 @@ app.get('/health', (req, res) => res.send("Healthy"));
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + token + "_limitOrder where ordererAddress = "
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress = " + req.params.address.toLowerCase()
     try {
       const [results, fields] = await limitOrderPool.query(query);
       if (!results[0]) {
@@ -40,9 +40,9 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
 app.post('/createLimitOrder', async (req, res) => {
   const currentTime = Math.round(new Date() / 1000);
   const orderData = {
-    ordererAddress: req.body.ordererAddress,
-    tokenInAddress: req.body.tokenInAddress,
-    tokenOutAddress: req.body.tokenOutAddress,
+    ordererAddress: req.body.ordererAddress.toLowerCase(),
+    tokenInAddress: req.body.tokenInAddress.toLowerCase(),
+    tokenOutAddress: req.body.tokenOutAddress.toLowerCase(),
     tokenInAmount: req.body.tokenInAmount,
     tokenOutAmount: req.body.tokenOutAmount,
     tokenPrice: req.body.tokenOutAmount / req.body.tokenInAmount,
@@ -51,10 +51,10 @@ app.post('/createLimitOrder', async (req, res) => {
     lastAttemptedTime: 0,
     attempts: 0,
     orderStatus: "PENDING",
-    orderCode: req.body.ordererAddress + "_" + currentTime,
+    orderCode: req.body.ordererAddress.toLowerCase() + "_" + currentTime,
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO " + req.body.tokenOutAddress + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       const [results, fields] = await limitOrderPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
