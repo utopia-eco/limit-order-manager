@@ -23,7 +23,7 @@ app.get('/health', (req, res) => res.send("Healthy"));
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress = " + req.params.address.toLowerCase()
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
   console.log(query);
     try {
       const [results, fields] = await limitOrderPool.query(query);
@@ -41,9 +41,9 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
 app.post('/createLimitOrder', async (req, res) => {
   const currentTime = Math.round(new Date() / 1000);
   const orderData = {
-    ordererAddress: req.body.ordererAddress.toLowerCase() + "_",
-    tokenInAddress: req.body.tokenInAddress.toLowerCase() + "_",
-    tokenOutAddress: req.body.tokenOutAddress.toLowerCase() + "_",
+    ordererAddress: req.body.ordererAddress.toLowerCase(),
+    tokenInAddress: req.body.tokenInAddress.toLowerCase(),
+    tokenOutAddress: req.body.tokenOutAddress.toLowerCase(),
     tokenInAmount: req.body.tokenInAmount,
     tokenOutAmount: req.body.tokenOutAmount,
     tokenPrice: req.body.tokenOutAmount / req.body.tokenInAmount,
