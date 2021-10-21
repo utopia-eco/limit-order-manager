@@ -30,7 +30,7 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
       if (!results[0]) {
         res.json({ status: "Not Found" });
       } else {
-        res.json(results[0])
+        res.json(results)
       }
     } catch (error) {
       console.error("error", error);
