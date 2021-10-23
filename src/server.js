@@ -40,7 +40,7 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress='PENDING'"
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where orderStatus='PENDING'"
   console.log(query);
     try {
       const [results, fields] = await limitOrderPool.query(query);
