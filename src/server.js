@@ -7,6 +7,7 @@ const cors = require('cors')
 const Web3 = require("web3")
 const web3 = new Web3("https://bsc-dataseed.binance.org/");
 
+const { v4: uuidv4  } = require('uuid');
 const { tokenPricePool , limitOrderPool, stopLossPool } = require('./databaseClient');
 
 const port = process.env.PORT
@@ -56,6 +57,7 @@ app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
 // Creates a limit order
 app.post('/createLimitOrder', async (req, res) => {
   const currentTime = Math.round(new Date() / 1000);
+  console.log(uuidv4());
   const orderData = {
     ordererAddress: req.body.ordererAddress.toLowerCase(),
     tokenInAddress: req.body.tokenInAddress.toLowerCase(),
@@ -68,7 +70,7 @@ app.post('/createLimitOrder', async (req, res) => {
     lastAttemptedTime: 0,
     attempts: 0,
     orderStatus: "PENDING",
-    orderCode: req.body.ordererAddress.toLowerCase() + "_" + currentTime,
+    orderCode: uuidv4(),
   }
   console.log("order logged ", orderData);
   const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -84,7 +86,7 @@ app.post('/createLimitOrder', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
-  const query = "DELETE * FROM " + req.params.token + "_limitOrder WHERE orderCode = '" + req.params.orderCode +"'"
+  const query = "DELETE * FROM " + req.params.token + "_limitOrder WHERE orderCode='" + req.params.orderCode +"'"
     try {
       const [results, fields] = await limitOrderPool.query(query);
       if (!results[0]) {
