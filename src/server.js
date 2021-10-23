@@ -37,6 +37,22 @@ app.get('/retrieveLimitOrders/:address/:token', async (req, res) => {
     }
 })
 
+// Returns associated limit orders for orderer address
+app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress='PENDING'"
+  console.log(query);
+    try {
+      const [results, fields] = await limitOrderPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "No pending orders found for token" });
+      } else {
+        res.json(results)
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
 // Creates a limit order
 app.post('/createLimitOrder', async (req, res) => {
   const currentTime = Math.round(new Date() / 1000);

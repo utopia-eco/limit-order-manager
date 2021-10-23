@@ -19,6 +19,10 @@ Limit Order APIs
         - `token`: Token which the orderer wants to delete the limit order for (output token for swap)
         - `orderCode`: Code of limit order
 
+- Retrieves all pending limit orders for a token
+    - GET /retrievePendingLimitOrders/:token
+        - `token`: Token which you want the pending limit orders for
+
 Stop Loss APIs (WIP)
 - Retrieves a limit order given the following values
     - GET /retrieveStopLosses/:address/:token
@@ -37,3 +41,6 @@ Stop Loss APIs (WIP)
     - DELETE /deleteStopLoss/:token/:orderCode
         - `token`: Token which the orderer wants to delete the stop loss for (output token for swap)
         - `orderCode`: Code of stop loss order
+- Retrieves all pending stop loss orders for a token
+    - GET /retrievePendingStopLosses/:token
+        - `token`: Token which you want the stop loss orders for
