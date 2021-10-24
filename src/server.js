@@ -71,6 +71,7 @@ app.post('/createLimitOrder', async (req, res) => {
     attempts: 0,
     orderStatus: "PENDING",
     orderCode: uuidv4(),
+    transactionHash: '0x0'
   }
   console.log("order logged ", orderData);
   const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
