@@ -93,7 +93,7 @@ app.post('/createLimitOrder', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       const [results, fields] = await limitOrderPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
