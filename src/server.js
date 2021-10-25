@@ -106,7 +106,7 @@ app.post('/createLimitOrder', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
-  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitOrder SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.token.orderCode + "\""
+  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitOrder SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.orderCode + "\""
   console.log(query);
     try {
       const [results, fields] = await limitOrderPool.query(query);
