@@ -82,7 +82,7 @@ app.post('/createLimitOrder', async (req, res) => {
     tokenOutAddress: req.body.tokenOutAddress.toLowerCase(),
     tokenInAmount: req.body.tokenInAmount,
     tokenOutAmount: req.body.tokenOutAmount,
-    tokenPrice: req.body.tokenOutAmount / req.body.tokenInAmount,
+    tokenPrice: req.body.tokenPrice,
     slippage: req.body.slippage,
     orderTime: currentTime,
     lastAttemptedTime: 0,
