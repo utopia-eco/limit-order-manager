@@ -55,7 +55,7 @@ app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
 })
 
 // Returns associated limit orders for orderer address
-app.get('/retrievePendingLimitOrders/:token/:feeTxHash', async (req, res) => {
+app.get('/retrieveLimitOrders/:token/:feeTxHash', async (req, res) => {
   const token = req.params.token.toLowerCase();
   const feeTxHash = req.params.feeTxHash.toLowerCase();
   const query = "SELECT * FROM " + token + "_limitOrder where feeTxHash='" + feeTxHash + "'";
