@@ -14,6 +14,7 @@ Limit Order APIs
             - `tokenInAmount`: Amount of token that the user wants to convert from
             - `tokenOutAmount`: Amount of the token that the user wants to convert to
             - `slippage`: Maximum slippage that the user allows for the limit order trade
+            - `feeTxHash`: Transaction hash of fee paid for order creation
 - Deletes a limit order
     - DELETE /deleteLimitOrder/:token/:orderCode
         - `token`: Token which the orderer wants to delete the limit order for (output token for swap)
@@ -22,6 +23,11 @@ Limit Order APIs
 - Retrieves all pending limit orders for a token
     - GET /retrievePendingLimitOrders/:token
         - `token`: Token which you want the pending limit orders for
+
+- Retrieves limit order associated with token and fee transaction hash
+    - GET /retrieveLimitOrders/:token/:feeTxHash
+        - `token`: Token which is associated with limit order
+        - `feeTxHash`: Transaction hash of feepaid for order creation
 
 Stop Loss APIs (WIP)
 - Retrieves a limit order given the following values
@@ -37,6 +43,7 @@ Stop Loss APIs (WIP)
             - `tokenInAmount`: Amount of token that the user wants to convert from
             - `tokenOutAmount`: Amount of token that the user wants to convert to
             - `slippage`: Maximum slippage that the user allows for the stop loss trade
+            - `feeTxHash`: Transaction hash of fee paid for order creation
 - Deletes a stop loss order
     - DELETE /deleteStopLoss/:token/:orderCode
         - `token`: Token which the orderer wants to delete the stop loss for (output token for swap)

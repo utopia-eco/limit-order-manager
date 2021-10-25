@@ -54,6 +54,24 @@ app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
     }
 })
 
+// Returns associated limit orders for orderer address
+app.get('/retrievePendingLimitOrders/:token/:feeTxHash', async (req, res) => {
+  const token = req.params.token.toLowerCase();
+  const feeTxHash = req.params.feeTxHash.toLowerCase();
+  const query = "SELECT * FROM " + token + "_limitOrder where feeTxHash='" + feeTxHash + "'";
+  console.log(query);
+    try {
+      const [results, fields] = await limitOrderPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "No pending orders found for given input of " + token + " with fee txHash of " + feeTxHash });
+      } else {
+        res.json(results)
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
 // Creates a limit order
 app.post('/createLimitOrder', async (req, res) => {
   const currentTime = Math.round(new Date() / 1000);
@@ -71,7 +89,8 @@ app.post('/createLimitOrder', async (req, res) => {
     attempts: 0,
     orderStatus: "PENDING",
     orderCode: uuidv4(),
-    transactionHash: '0x0'
+    feeTxHash: req.body.feeTxHash.toLowerCase(),
+    executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
   const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
