@@ -95,7 +95,7 @@ app.post('/createLimitOrder', async (req, res) => {
   console.log("order logged ", orderData);
   const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitOrder VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
-      const [results, fields] = await limitOrderPool.query(query, Object.values(orderData));
+      await limitOrderPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
     } catch (error) {
       console.error("error", error);
@@ -106,7 +106,7 @@ app.post('/createLimitOrder', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
-  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitOrder SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + order.orderCode + "\""
+  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitOrder SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.token.orderCode + "\""
   console.log(query);
     try {
       const [results, fields] = await limitOrderPool.query(query);
