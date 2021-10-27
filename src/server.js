@@ -120,6 +120,105 @@ app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
     }
 })
 
+// Returns associated stop loss orders for orderer address
+app.get('/retrieveStopLosses/:address/:token', async (req, res) => {
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
+  console.log(query);
+    try {
+      const [results, fields] = await stopLossPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "Not Found" });
+      } else {
+        res.json(results)
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
+// Returns associated stop loss orders for orderer address
+app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where orderStatus='PENDING'"
+  console.log(query);
+    try {
+      const [results, fields] = await limitOrderPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "No pending orders found for token" });
+      } else {
+        res.json(results)
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
+// Returns associated limit orders for orderer address
+app.get('/retrieveStopLosses/:token/:feeTxHash', async (req, res) => {
+  const token = req.params.token.toLowerCase();
+  const feeTxHash = req.params.feeTxHash.toLowerCase();
+  const query = "SELECT * FROM " + token + "_stopLoss where feeTxHash='" + feeTxHash + "'";
+  console.log(query);
+    try {
+      const [results, fields] = await stopLossPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "No pending orders found for given input of " + token + " with fee txHash of " + feeTxHash });
+      } else {
+        res.json(results)
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
+// Creates a stop loss order order
+app.post('/createStopLoss', async (req, res) => {
+  const currentTime = Math.round(new Date() / 1000);
+  console.log(uuidv4());
+  const orderData = {
+    ordererAddress: req.body.ordererAddress.toLowerCase(),
+    tokenInAddress: req.body.tokenInAddress.toLowerCase(),
+    tokenOutAddress: req.body.tokenOutAddress.toLowerCase(),
+    tokenInAmount: req.body.tokenInAmount,
+    tokenOutAmount: req.body.tokenOutAmount,
+    tokenPrice: req.body.tokenPrice,
+    slippage: req.body.slippage,
+    orderTime: currentTime,
+    lastAttemptedTime: 0,
+    attempts: 0,
+    orderStatus: "PENDING",
+    orderCode: uuidv4(),
+    feeTxHash: req.body.feeTxHash.toLowerCase(),
+    executionTxHash: '0x0',
+  }
+  console.log("order logged ", orderData);
+  const query = "INSERT INTO " + req.body.tokenInAddress.toLowerCase() + "_stopLoss VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    try {
+      await stopLossPool.query(query, Object.values(orderData));
+      res.json({ status: "Success"})
+    } catch (error) {
+      console.error("error", error);
+      res.json({ status: "Failure" });
+    }
+})
+
+
+// Deletes 
+app.delete('/deleteStopLoss/:token/:orderCode', async (req, res) => {
+  const query = "UPDATE " + req.params.token.toLowerCase() + "_stopLoss SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.orderCode + "\""
+  console.log(query);
+    try {
+      const [results, fields] = await stopLossPool.query(query);
+      if (!results[0]) {
+        res.json({ status: "Not Found" });
+      } else {
+        res.json(results[0])
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+})
+
+
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)
