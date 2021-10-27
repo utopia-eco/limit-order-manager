@@ -137,7 +137,7 @@ app.get('/retrieveStopLosses/:address/:token', async (req, res) => {
 })
 
 // Returns associated stop loss orders for orderer address
-app.get('/retrievePendingLimitOrders/:token', async (req, res) => {
+app.get('/retrievePendingStopLosses/:token', async (req, res) => {
   const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where orderStatus='PENDING'"
   console.log(query);
     try {
