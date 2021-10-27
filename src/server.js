@@ -122,7 +122,7 @@ app.delete('/deleteLimitOrder/:token/:orderCode', async (req, res) => {
 
 // Returns associated stop loss orders for orderer address
 app.get('/retrieveStopLosses/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitOrder where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
+  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
   console.log(query);
     try {
       const [results, fields] = await stopLossPool.query(query);
@@ -141,7 +141,7 @@ app.get('/retrievePendingStopLosses/:token', async (req, res) => {
   const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where orderStatus='PENDING'"
   console.log(query);
     try {
-      const [results, fields] = await limitOrderPool.query(query);
+      const [results, fields] = await stopLossPool.query(query);
       if (!results[0]) {
         res.json({ status: "No pending orders found for token" });
       } else {
