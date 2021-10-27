@@ -46,6 +46,7 @@ Stop Loss APIs (WIP)
             - `tokenOutAmount`: Amount of token that the user wants to convert to
             - `tokenPrice`: Price at which the order will execute
             - `slippage`: Maximum slippage that the user allows for the stop loss trade
+            - `customTaxForToken`: Whether the token has a custom tax (true/false)
             - `feeTxHash`: Transaction hash of fee paid for order creation
         
 - Deletes a stop loss order
