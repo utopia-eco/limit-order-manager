@@ -37,7 +37,7 @@ Limit Sell APIs
         - `token` : Token that the orderer wants to convert to BNB
     
 - Creates a stop loss order given the following values
-    - POST /createStopLoss
+    - POST /createLimitSell
         - POST object with the following values:
             - `ordererAddress`: Orderer Address
             - `tokenInAddress`: Address of the BEP-20 token that the user wants to convert from (usually WBNB)
@@ -50,17 +50,17 @@ Limit Sell APIs
             - `feeTxHash`: Transaction hash of fee paid for order creation
         
 - Deletes a stop loss order
-    - DELETE /deleteStopLoss/:token/:orderCode
-        - `token`: Token which the orderer wants to delete the stop loss for (output token for swap)
-        - `orderCode`: Code of stop loss order
+    - DELETE /deleteLimitSell/:token/:orderCode
+        - `token`: Token which the orderer wants to delete the limit sell for (output token for swap)
+        - `orderCode`: Code of limit sell order
 
 - Retrieves all pending stop loss orders for a token
-    - GET /retrievePendingStopLosses/:token
-        - `token`: Token which you want the stop loss orders for
+    - GET /retrievePendingLimitSells/:token
+        - `token`: Token which you want the limit sell orders for
 
 - Retrieves stop loss order associated with token and fee transaction hash
-    - GET /retrieveStopLosses/:token/:feeTxHash
-        - `token`: Token which is associated with stop loss order
+    - GET /retrieveLimitSells/:token/:feeTxHash
+        - `token`: Token which is associated with limit sell order
         - `feeTxHash`: Transaction hash of feepaid for order creation
 
 Stop Loss APIs
