@@ -40,10 +40,6 @@ app.get('/retrieveLimitBuys/:address/:token', async (req, res) => {
 // Returns associated limit orders for orderer address
 app.get('/retrievePendingLimitBuys/:token', async (req, res) => {
   const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitBuy where orderStatus='PENDING'"
-  console.log("databases", process.env.DB_LIMIT_ORDER);
-  console.log("databases2", process.env.DB_LIMIT_SELL);
-  console.log("databases3", process.env.DB_STOP_LOSS);
-  console.log("abcde")
     try {
       const [results, fields] = await limitBuyPool.query(query);
       if (!results[0]) {
