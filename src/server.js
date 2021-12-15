@@ -24,7 +24,9 @@ app.get('/health', (req, res) => res.send("Healthy"));
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitBuys/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitBuy where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
+  const tokenOut = req.params.token.toLowerCase()
+  const address = req.params.address.toLowerCase();
+  const query = "SELECT * FROM limitBuy where ordererAddress=\"" + address +"\" AND tokenOutAddress=\"" + tokenOut + "\"";
     try {
       const [results, fields] = await limitBuyPool.query(query);
       if (!results[0]) {
@@ -39,7 +41,8 @@ app.get('/retrieveLimitBuys/:address/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrievePendingLimitBuys/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitBuy where orderStatus='PENDING'"
+  const tokenOut = req.params.token.toLowerCase() ;
+  const query = "SELECT * FROM limitBuy where orderStatus='PENDING' AND tokenOutAddress=\"" + tokenOut + "\"";
     try {
       const [results, fields] = await limitBuyPool.query(query);
       if (!results[0]) {
@@ -54,13 +57,13 @@ app.get('/retrievePendingLimitBuys/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitBuys/:token/:feeTxHash', async (req, res) => {
-  const token = req.params.token.toLowerCase();
+  const tokenOut = req.params.token.toLowerCase();
   const feeTxHash = req.params.feeTxHash.toLowerCase();
-  const query = "SELECT * FROM " + token + "_limitBuy where feeTxHash='" + feeTxHash + "'";
+  const query = "SELECT * FROM limitBuy where feeTxHash='" + feeTxHash + "' AND tokenOutAddress=\"" + tokenOut + "\"";
     try {
       const [results, fields] = await limitBuyPool.query(query);
       if (!results[0]) {
-        res.json({ status: "No pending orders found for given input of " + token + " with fee txHash of " + feeTxHash });
+        res.json({ status: "No pending orders found for given input of " + tokenOut + " with fee txHash of " + feeTxHash });
       } else {
         res.json(results)
       }
@@ -89,7 +92,7 @@ app.post('/createLimitBuy', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO " + req.body.tokenOutAddress.toLowerCase() + "_limitBuy VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO limitBuy VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       await limitBuyPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
@@ -102,7 +105,9 @@ app.post('/createLimitBuy', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitBuy/:token/:orderCode', async (req, res) => {
-  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitBuy SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.orderCode + "\""
+  const tokenOut = req.params.token.toLowerCase();
+  const orderCode = req.params.orderCode;
+  const query = "UPDATE limitBuy SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + orderCode + "\" AND tokenOutAddress=\"" + tokenOut + "\"";
     try {
       const [results, fields] = await limitBuyPool.query(query);
       if (!results[0]) {
@@ -117,7 +122,9 @@ app.delete('/deleteLimitBuy/:token/:orderCode', async (req, res) => {
 
 // Returns associated limit buys for orderer address
 app.get('/retrieveLimitSells/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitSell where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
+  const tokenIn = req.params.token.toLowerCase();
+  const ordererAddress = req.params.address.toLowerCase();
+  const query = "SELECT * FROM limitSell where ordererAddress=\"" + ordererAddress +"\" AND tokenIn=\"" + ordererAddress + "\"";
     try {
       const [results, fields] = await limitSellPool.query(query);
       if (!results[0]) {
@@ -132,7 +139,8 @@ app.get('/retrieveLimitSells/:address/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrievePendingLimitSells/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_limitSell where orderStatus='PENDING'"
+  const tokenIn = req.params.token.toLowerCase();
+  const query = "SELECT * FROM limitSell where orderStatus='PENDING' AND tokenInAddress=\"" + tokenIn + "\"";
     try {
       const [results, fields] = await limitSellPool.query(query);
       if (!results[0]) {
@@ -147,9 +155,9 @@ app.get('/retrievePendingLimitSells/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveLimitSells/:token/:feeTxHash', async (req, res) => {
-  const token = req.params.token.toLowerCase();
+  const tokenIn = req.params.token.toLowerCase();
   const feeTxHash = req.params.feeTxHash.toLowerCase();
-  const query = "SELECT * FROM " + token + "_limitSell where feeTxHash='" + feeTxHash + "'";
+  const query = "SELECT * FROM limitSell where feeTxHash=\"" + feeTxHash + "\" AND tokenInAddress=\"" + tokenIn + "\"";
     try {
       const [results, fields] = await limitSellPool.query(query);
       if (!results[0]) {
@@ -183,7 +191,7 @@ app.post('/createLimitSell', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO " + req.body.tokenInAddress.toLowerCase() + "_limitSell VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO limitSell VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       await limitSellPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
@@ -196,7 +204,8 @@ app.post('/createLimitSell', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteLimitSell/:token/:orderCode', async (req, res) => {
-  const query = "UPDATE " + req.params.token.toLowerCase() + "_limitSell SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.orderCode + "\""
+  const orderCode = req.params.orderCode;
+  const query = "UPDATE limitSell SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + orderCode + "\""
     try {
       const [results, fields] = await limitSellPool.query(query);
       if (!results[0]) {
@@ -211,7 +220,9 @@ app.delete('/deleteLimitSell/:token/:orderCode', async (req, res) => {
 
 // Returns associated stop loss orders for orderer address
 app.get('/retrieveStopLosses/:address/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where ordererAddress=\"" + req.params.address.toLowerCase() +"\""
+  const tokenIn = req.params.token.toLowerCase();
+  const ordererAddress = req.params.address.toLowerCase();
+  const query = "SELECT * FROM stopLoss where ordererAddress=\"" + ordererAddress +"\" AND tokenInAddress=\"" + tokenIn + "\"";
     try {
       const [results, fields] = await stopLossPool.query(query);
       if (!results[0]) {
@@ -226,7 +237,8 @@ app.get('/retrieveStopLosses/:address/:token', async (req, res) => {
 
 // Returns associated stop loss orders for orderer address
 app.get('/retrievePendingStopLosses/:token', async (req, res) => {
-  const query = "SELECT * FROM " + req.params.token.toLowerCase() + "_stopLoss where orderStatus='PENDING'"
+  const tokenIn = req.params.token.toLowerCase();
+  const query = "SELECT * FROM stopLoss where orderStatus='PENDING' AND tokenInAddress=\"" + tokenIn + "\"";
     try {
       const [results, fields] = await stopLossPool.query(query);
       if (!results[0]) {
@@ -241,13 +253,13 @@ app.get('/retrievePendingStopLosses/:token', async (req, res) => {
 
 // Returns associated limit orders for orderer address
 app.get('/retrieveStopLosses/:token/:feeTxHash', async (req, res) => {
-  const token = req.params.token.toLowerCase();
+  const tokenIn = req.params.token.toLowerCase();
   const feeTxHash = req.params.feeTxHash.toLowerCase();
-  const query = "SELECT * FROM " + token + "_stopLoss where feeTxHash='" + feeTxHash + "'";
+  const query = "SELECT * FROM stopLoss where feeTxHash='" + feeTxHash + "' AND tokenInAddress=\"" + tokenIn + "\"";
     try {
       const [results, fields] = await stopLossPool.query(query);
       if (!results[0]) {
-        res.json({ status: "No pending orders found for given input of " + token + " with fee txHash of " + feeTxHash });
+        res.json({ status: "No pending orders found for given input of " + tokenIn + " with fee txHash of " + feeTxHash });
       } else {
         res.json(results)
       }
@@ -277,7 +289,7 @@ app.post('/createStopLoss', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO " + req.body.tokenInAddress.toLowerCase() + "_stopLoss VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO stopLoss VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       await stopLossPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
@@ -290,7 +302,8 @@ app.post('/createStopLoss', async (req, res) => {
 
 // Deletes 
 app.delete('/deleteStopLoss/:token/:orderCode', async (req, res) => {
-  const query = "UPDATE " + req.params.token.toLowerCase() + "_stopLoss SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + req.params.orderCode + "\""
+  const orderCode = req.params.orderCode;
+  const query = "UPDATE stopLoss SET orderStatus = 'CANCELLED' WHERE orderCode = \"" + orderCode + "\""
     try {
       const [results, fields] = await stopLossPool.query(query);
       if (!results[0]) {
