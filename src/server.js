@@ -191,7 +191,7 @@ app.post('/createLimitSell', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO limitSell VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO limitSell VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       await limitSellPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
@@ -279,7 +279,7 @@ app.post('/createStopLoss', async (req, res) => {
     tokenOutAmount: req.body.tokenOutAmount,
     tokenPrice: req.body.tokenPrice,
     slippage: req.body.slippage,
-    customTaxForToken: req.body.customTaxForToken,
+    // customTaxForToken: req.body.customTaxForToken,
     orderTime: currentTime,
     lastAttemptedTime: 0,
     attempts: 0,
@@ -289,7 +289,7 @@ app.post('/createStopLoss', async (req, res) => {
     executionTxHash: '0x0',
   }
   console.log("order logged ", orderData);
-  const query = "INSERT INTO stopLoss VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  const query = "INSERT INTO stopLoss VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     try {
       await stopLossPool.query(query, Object.values(orderData));
       res.json({ status: "Success"})
