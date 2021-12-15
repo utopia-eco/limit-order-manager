@@ -124,7 +124,7 @@ app.delete('/deleteLimitBuy/:token/:orderCode', async (req, res) => {
 app.get('/retrieveLimitSells/:address/:token', async (req, res) => {
   const tokenIn = req.params.token.toLowerCase();
   const ordererAddress = req.params.address.toLowerCase();
-  const query = "SELECT * FROM limitSell where ordererAddress=\"" + ordererAddress +"\" AND tokenIn=\"" + ordererAddress + "\"";
+  const query = "SELECT * FROM limitSell where ordererAddress=\"" + ordererAddress +"\" AND tokenInAddress=\"" + ordererAddress + "\"";
     try {
       const [results, fields] = await limitSellPool.query(query);
       if (!results[0]) {
