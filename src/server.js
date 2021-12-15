@@ -181,7 +181,7 @@ app.post('/createLimitSell', async (req, res) => {
     tokenOutAmount: req.body.tokenOutAmount,
     tokenPrice: req.body.tokenPrice,
     slippage: req.body.slippage,
-    customTaxForToken: req.body.customTaxForToken,
+    // customTaxForToken: req.body.customTaxForToken,
     orderTime: currentTime,
     lastAttemptedTime: 0,
     attempts: 0,
